@@ -109,7 +109,8 @@ npm run dev
 | 2 | `supabase/02_rubrica_integracion.sql` | APP_Fuerza _De_Venta |
 | 3 | `supabase/03_usuarios_demo_docente.sql` | APP_Fuerza _De_Venta |
 | **4** | **`supabase/04_auth_usuarios_demo.sql`** | **APP_Fuerza _De_Venta — OBLIGATORIO para login** |
-| 5 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
+| **5** | **`supabase/05_ruta_demo_asesor.sql`** | **APP_Fuerza _De_Venta — visitas en pestaña Ruta** |
+| 6 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
 | 5 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
 | 6 | `supabase/03_fix_registro.sql` | banco_pichincha |
 | 7 | `supabase/04_cliente_solicitud_credito.sql` | banco_pichincha |
@@ -117,8 +118,10 @@ npm run dev
 ### Si el login dice "correo o contraseña incorrectos"
 
 1. En Supabase → **Authentication → Providers → Email**: desactiva **Confirm email**.
-2. Ejecuta **`04_auth_usuarios_demo.sql`** en SQL Editor (crea usuarios Auth con contraseña).
-3. Vuelve a intentar:
+2. Ejecuta **`04_auth_usuarios_demo.sql`** en SQL Editor (parchea trigger + crea usuarios Auth).
+3. Debe mostrar **2 filas** en la verificación final (asesor + supervisor).
+4. Ejecuta **`05_ruta_demo_asesor.sql`** para ver la ruta en la app móvil.
+5. Vuelve a intentar login:
    - Asesor móvil / web asesor: `asesor@pichincha.com` / `Docente2025!`
    - Supervisor web: `supervisor@pichincha.com` / `Docente2025!`
 
