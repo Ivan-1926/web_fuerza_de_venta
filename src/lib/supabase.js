@@ -224,6 +224,17 @@ export async function signInAdvisor(email, password) {
     const msg = error.message.toLowerCase().includes('invalid')
       ? 'Correo o contraseña incorrectos.'
       : error.message;
+    // Respaldo académico si Auth aún no tiene el usuario (sin ejecutar script 04)
+    if (
+      cleanEmail === 'asesor@pichincha.com' ||
+      cleanEmail === 'supervisor@pichincha.com'
+    ) {
+      if (password === 'Docente2025!' && KNOWN_PROFILES[cleanEmail]) {
+        const user = buildUser(cleanEmail, KNOWN_PROFILES[cleanEmail], `local-${cleanEmail}`);
+        sessionStorage.setItem('fv_web_mock_user', JSON.stringify(user));
+        return { ok: true, user, warning: 'Sesión local — ejecuta 04_auth_usuarios_demo.sql en Supabase.' };
+      }
+    }
     return { ok: false, error: msg };
   }
 

@@ -108,16 +108,23 @@ npm run dev
 | 1 | `supabase/schema_and_seed.sql` | APP_Fuerza _De_Venta |
 | 2 | `supabase/02_rubrica_integracion.sql` | APP_Fuerza _De_Venta |
 | 3 | `supabase/03_usuarios_demo_docente.sql` | APP_Fuerza _De_Venta |
-| 4 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
-| 5 | `supabase/03_fix_registro.sql` | banco_pichincha |
-| 6 | `supabase/04_cliente_solicitud_credito.sql` | banco_pichincha |
+| **4** | **`supabase/04_auth_usuarios_demo.sql`** | **APP_Fuerza _De_Venta — OBLIGATORIO para login** |
+| 5 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
+| 5 | `supabase/02_rubrica_integracion.sql` | banco_pichincha |
+| 6 | `supabase/03_fix_registro.sql` | banco_pichincha |
+| 7 | `supabase/04_cliente_solicitud_credito.sql` | banco_pichincha |
 
-**Supabase Auth → Users** (crear manualmente):
+### Si el login dice "correo o contraseña incorrectos"
 
-- `supervisor@pichincha.com` / `Docente2025!`
-- `asesor@pichincha.com` / `Docente2025!`
+1. En Supabase → **Authentication → Providers → Email**: desactiva **Confirm email**.
+2. Ejecuta **`04_auth_usuarios_demo.sql`** en SQL Editor (crea usuarios Auth con contraseña).
+3. Vuelve a intentar:
+   - Asesor móvil / web asesor: `asesor@pichincha.com` / `Docente2025!`
+   - Supervisor web: `supervisor@pichincha.com` / `Docente2025!`
 
-Desactivar confirmación de email en desarrollo.
+**Alternativa manual:** Authentication → Users → Add user (mismos correos y contraseña).
+
+**Modo demo móvil (sin Auth):** `demo@pichincha.com` / `pichincha123`
 
 ---
 
