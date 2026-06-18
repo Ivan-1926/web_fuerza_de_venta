@@ -151,7 +151,7 @@ async function fetchAdvisorProfileByEmail(email) {
     try {
       const { data, error } = await supabase
         .from('asesores_negocio')
-        .select('nombres, apellidos, rol, perfil, activo, email')
+        .select('nombres, apellidos, rol, nivel, activo, email')
         .ilike('email', clean)
         .maybeSingle();
       if (!error && data && data.activo !== false) {
@@ -159,7 +159,7 @@ async function fetchAdvisorProfileByEmail(email) {
           nombres: data.nombres || '',
           apellidos: data.apellidos || '',
           rol: data.rol || 'asesor',
-          perfil: data.perfil || '',
+          perfil: data.nivel || '',
         };
       }
     } catch (e) {
@@ -168,6 +168,21 @@ async function fetchAdvisorProfileByEmail(email) {
   }
 
   return KNOWN_PROFILES[clean] || null;
+}
+
+function profileFromAuthUser(user) {
+  const meta = user?.user_metadata || {};
+  const known = KNOWN_PROFILES[user?.email?.trim().toLowerCase()];
+  if (known) return known;
+  const rol = meta.rol || 'asesor';
+  const nombre = (meta.nombre || user?.email?.split('@')[0] || 'Usuario').trim();
+  const parts = nombre.split(/\s+/);
+  return {
+    nombres: parts[0] || nombre,
+    apellidos: parts.slice(1).join(' ') || '',
+    rol,
+    perfil: rol === 'supervisor' ? 'Supervisor de Crédito' : 'Oficial de Crédito',
+  };
 }
 
 export async function getSessionUser() {
@@ -179,7 +194,9 @@ export async function getSessionUser() {
   const session = data?.session;
   if (!session?.user?.email) return null;
   const profile = await fetchAdvisorProfileByEmail(session.user.email);
-  if (!profile) return null;
+  if (!profile) {
+    return buildUser(session.user.email, profileFromAuthUser(session.user), session.user.id);
+  }
   return buildUser(session.user.email, profile, session.user.id);
 }
 
@@ -191,7 +208,11 @@ export function subscribeAuthChanges(callback) {
       return;
     }
     const profile = await fetchAdvisorProfileByEmail(session.user.email);
-    callback(profile ? buildUser(session.user.email, profile, session.user.id) : null);
+    callback(
+      profile
+        ? buildUser(session.user.email, profile, session.user.id)
+        : buildUser(session.user.email, profileFromAuthUser(session.user), session.user.id)
+    );
   });
   return () => data.subscription.unsubscribe();
 }
@@ -238,14 +259,9 @@ export async function signInAdvisor(email, password) {
     return { ok: false, error: msg };
   }
 
-  const profile = await fetchAdvisorProfileByEmail(data.user.email);
+  let profile = await fetchAdvisorProfileByEmail(data.user.email);
   if (!profile) {
-    await supabase.auth.signOut();
-    return {
-      ok: false,
-      error:
-        'Perfil no encontrado en asesores_negocio. Ejecuta 03_usuarios_demo_docente.sql.',
-    };
+    profile = profileFromAuthUser(data.user);
   }
 
   return { ok: true, user: buildUser(data.user.email, profile, data.user.id) };
