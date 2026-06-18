@@ -62,7 +62,7 @@ export async function fetchCartera(limit = 100) {
   return data ?? [];
 }
 
-/** Solicitudes de crédito (tabla credit_applications, originadas en la app FV). */
+/** Solicitudes de crédito (originadas en app cliente o app FV). */
 export async function fetchSolicitudes(limit = 100) {
   if (!supabase) return getMockSolicitudes();
   const { data, error } = await supabase
