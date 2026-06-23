@@ -34,7 +34,9 @@ export default function Layout() {
 
       <header className="top-bar">
         <div className="top-bar__brand">
-          <div className="top-bar__logo">BP</div>
+          <span className="top-bar__logo top-bar__logo--image">
+            <img src="/pichincha-logo.png" alt="Banco Pichincha" />
+          </span>
           <div>
             <div>Banco Pichincha</div>
             <div className="top-bar__brand-sub">Core financiero · Fuerza de Ventas</div>

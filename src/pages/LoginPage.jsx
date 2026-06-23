@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowRight, BadgeCheck, Building2, LockKeyhole, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const SUPERVISOR_EMAIL = 'supervisor@pichincha.com';
 const SUPERVISOR_PASS = 'Docente2025!';
+
+const highlights = [
+  { label: 'Banca con propósito', value: 'Impulsamos negocios familiares y microempresas.' },
+  { label: 'Gestión segura', value: 'Procesos protegidos para expedientes y evaluación.' },
+  { label: 'Equipo en campo', value: 'Herramientas simples para vender, visitar y aprobar.' },
+];
 
 export default function LoginPage() {
   const { login, isAuthenticated, loading } = useAuth();
@@ -38,60 +45,116 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-card__brand">
-          <div className="login-card__logo">BP</div>
-          <div>
-            <h1>Fuerza de Ventas Web</h1>
-            <p>Banco Pichincha · Panel supervisor</p>
+    <main className="brand-login-page">
+      <section className="brand-hero" aria-label="Presentación de Banco Pichincha">
+        <nav className="brand-hero__nav">
+          <img src="/pichincha-logo.png" alt="Banco Pichincha" className="brand-hero__logo" />
+          <a href="#acceso" className="brand-hero__access">
+            Acceso ventas
+            <ArrowRight size={16} />
+          </a>
+        </nav>
+
+        <div className="brand-hero__content">
+          <p className="brand-hero__eyebrow">Banco Pichincha · Fuerza de Ventas</p>
+          <h1>
+            Banca cercana para hacer crecer cada historia de negocio.
+          </h1>
+          <p className="brand-hero__lead">
+            Somos una entidad financiera que acompaña a personas, familias y empresas con soluciones
+            simples, responsables y seguras. Esta plataforma conecta al equipo comercial con la
+            información clave para atender mejor, decidir más rápido y cuidar cada relación.
+          </p>
+
+          <div className="brand-hero__actions">
+            <a href="#acceso" className="brand-hero__primary">
+              Ingresar al panel
+              <ArrowRight size={18} />
+            </a>
+            <span className="brand-hero__signature">Confianza, servicio y progreso.</span>
           </div>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <label>
-            Correo electrónico
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="supervisor@pichincha.com"
-              required
-              autoComplete="username"
-            />
-          </label>
-          <label>
-            Contraseña
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              autoComplete="current-password"
-            />
-          </label>
-
-          {localError && <div className="login-form__error">{localError}</div>}
-
-          <button type="submit" className="login-form__submit" disabled={busy}>
-            {busy ? 'Ingresando...' : 'Ingresar como supervisor'}
-          </button>
-
-          <button type="button" className="login-form__secondary" onClick={fillSupervisor}>
-            Rellenar credenciales demo
-          </button>
-        </form>
-
-        <div className="login-card__hint">
-          <strong>Supervisor (web)</strong>
-          <span>{SUPERVISOR_EMAIL}</span>
-          <span>{SUPERVISOR_PASS}</span>
-          <p className="login-card__note">
-            Usuario creado en Supabase Auth + script <code>03_usuarios_demo_docente.sql</code>
-          </p>
+        <div className="brand-story">
+          {highlights.map((item) => (
+            <article className="brand-story__item" key={item.label}>
+              <BadgeCheck size={18} />
+              <div>
+                <strong>{item.label}</strong>
+                <span>{item.value}</span>
+              </div>
+            </article>
+          ))}
         </div>
-      </div>
-    </div>
+      </section>
+
+      <aside className="brand-login-panel" id="acceso" aria-label="Inicio de sesión">
+        <div className="brand-login-card">
+          <div className="brand-login-card__header">
+            <div className="brand-login-card__mark">
+              <LockKeyhole size={24} />
+            </div>
+            <div>
+              <p>Portal interno</p>
+              <h2>Ingreso fuerza de ventas</h2>
+            </div>
+          </div>
+
+          <div className="brand-login-card__trust">
+            <span>
+              <ShieldCheck size={15} />
+              Conexión segura
+            </span>
+            <span>
+              <Building2 size={15} />
+              Banco Pichincha
+            </span>
+          </div>
+
+          <form className="login-form" onSubmit={handleSubmit}>
+            <label>
+              Correo electrónico
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="supervisor@pichincha.com"
+                required
+                autoComplete="username"
+              />
+            </label>
+            <label>
+              Contraseña
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                autoComplete="current-password"
+              />
+            </label>
+
+            {localError && <div className="login-form__error">{localError}</div>}
+
+            <button type="submit" className="login-form__submit" disabled={busy}>
+              {busy ? 'Validando acceso...' : 'Entrar al dashboard'}
+            </button>
+
+            <button type="button" className="login-form__secondary" onClick={fillSupervisor}>
+              Usar credenciales demo
+            </button>
+          </form>
+
+          <div className="brand-login-card__note">
+            <Sparkles size={16} />
+            <p>
+              El registro de usuarios se gestiona desde el backend/Supabase para mantener permisos,
+              roles y aprobaciones bajo control.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </main>
   );
 }

@@ -7,8 +7,8 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="login-page">
-        <p className="login-page__loading">Cargando sesión…</p>
+      <div className="brand-loading-page">
+        <p>Cargando sesión...</p>
       </div>
     );
   }
