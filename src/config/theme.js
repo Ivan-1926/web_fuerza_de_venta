@@ -17,12 +17,12 @@ export const colors = {
 };
 
 export const navItems = [
-  { id: 'inicio', label: 'Inicio', path: '/' },
-  { id: 'cartera', label: 'Cartera', path: '/cartera' },
-  { id: 'solicitudes', label: 'Solicitudes', path: '/solicitudes' },
-  { id: 'evaluacion', label: 'Evaluación', path: '/evaluacion' },
-  { id: 'cobranza', label: 'Cobranza', path: '/cobranza' },
-  { id: 'reportes', label: 'Reportes', path: '/reportes' },
+  { id: 'inicio', label: 'Inicio', path: '/', icon: 'home' },
+  { id: 'cartera', label: 'Cartera', path: '/cartera', icon: 'briefcase' },
+  { id: 'solicitudes', label: 'Solicitudes', path: '/solicitudes', icon: 'file' },
+  { id: 'evaluacion', label: 'Evaluación', path: '/evaluacion', icon: 'shield' },
+  { id: 'cobranza', label: 'Cobranza', path: '/cobranza', icon: 'coins' },
+  { id: 'reportes', label: 'Reportes', path: '/reportes', icon: 'chart' },
 ];
 
 export const quickAccess = [

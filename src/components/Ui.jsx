@@ -5,6 +5,7 @@ import {
   TrendingUp,
   FileText,
   Briefcase,
+  Home,
   Plus,
   Shield,
   Coins,
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 
 const iconMap = {
+  home: Home,
   briefcase: Briefcase,
   plus: Plus,
   shield: Shield,
@@ -59,7 +61,7 @@ export function KpiCard({ label, value, sub, accent, icon: Icon }) {
 export function QuickCard({ title, desc, color, iconName, onClick }) {
   const Icon = iconMap[iconName] || Briefcase;
   return (
-    <button type="button" className="quick-card" onClick={onClick}>
+    <button type="button" className="quick-card" style={{ '--quick-color': color }} onClick={onClick}>
       <div className="quick-card__icon" style={{ background: color }}>
         <Icon size={22} color="#fff" />
       </div>

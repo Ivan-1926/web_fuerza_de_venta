@@ -4,7 +4,7 @@ export default function CobranzaPage() {
   return (
     <PlaceholderPage
       title="Cobranza"
-      subtitle="Gestión de mora del día — conecta tablas de cobranza en Supabase cuando estén listas"
+      subtitle="Gestión de mora del día. Conecta tablas de cobranza en Supabase cuando estén listas."
     />
   );
 }

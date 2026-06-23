@@ -37,8 +37,6 @@ export default function LoginPage() {
     setPassword(SUPERVISOR_PASS);
   };
 
-  const displayError = localError;
-
   return (
     <div className="login-page">
       <div className="login-card">
@@ -74,10 +72,10 @@ export default function LoginPage() {
             />
           </label>
 
-          {displayError && <div className="login-form__error">{displayError}</div>}
+          {localError && <div className="login-form__error">{localError}</div>}
 
           <button type="submit" className="login-form__submit" disabled={busy}>
-            {busy ? 'Ingresando…' : 'Ingresar como supervisor'}
+            {busy ? 'Ingresando...' : 'Ingresar como supervisor'}
           </button>
 
           <button type="button" className="login-form__secondary" onClick={fillSupervisor}>

@@ -11,7 +11,7 @@ import {
 const ESTADOS_FINALES = ['aprobado', 'desembolsado', 'rechazado'];
 
 export default function SolicitudesPage() {
-  const { user, puedeAprobar } = useOutletContext();
+  const { puedeAprobar } = useOutletContext();
 
   const [rows, setRows] = useState([]);
   const [syncLog, setSyncLog] = useState([]);
@@ -38,7 +38,7 @@ export default function SolicitudesPage() {
     if (res.ok) {
       setToast(
         estado === 'aprobado'
-          ? 'Solicitud aprobada — crédito publicado a la app del cliente'
+          ? 'Solicitud aprobada: crédito publicado a la app del cliente'
           : 'Solicitud rechazada'
       );
       await load();
@@ -52,21 +52,23 @@ export default function SolicitudesPage() {
     <>
       <div className="page-header">
         <h2>Mis solicitudes</h2>
-        <p style={{ color: 'var(--bp-gris-medio)', marginTop: 4 }}>
+        <p>
           Expedientes transmitidos desde campo (tabla compartida{' '}
-          <code>credit_applications</code>)
+          <code>credit_applications</code>).
         </p>
       </div>
 
       {toast && (
         <div
           style={{
-            background: '#0F766E',
+            background: 'linear-gradient(135deg, #0F766E, #23B4C7)',
             color: '#fff',
-            padding: '10px 16px',
-            borderRadius: 8,
+            padding: '12px 16px',
+            borderRadius: 12,
             marginBottom: 16,
             fontSize: 14,
+            fontWeight: 800,
+            boxShadow: '0 14px 30px rgba(15, 118, 110, 0.2)',
           }}
         >
           {toast}
@@ -89,13 +91,13 @@ export default function SolicitudesPage() {
             {loading ? (
               <tr>
                 <td colSpan={puedeAprobar ? 6 : 5} style={{ textAlign: 'center', padding: 32 }}>
-                  Cargando…
+                  Cargando...
                 </td>
               </tr>
             ) : rows.length === 0 ? (
               <tr>
                 <td colSpan={puedeAprobar ? 6 : 5} style={{ textAlign: 'center', padding: 32 }}>
-                  Sin solicitudes — ejecuta los scripts SQL en Supabase
+                  Sin solicitudes. Ejecuta los scripts SQL en Supabase.
                 </td>
               </tr>
             ) : (
@@ -107,7 +109,7 @@ export default function SolicitudesPage() {
                     <td>
                       <strong>{r.client_name || r.client_dni || r.id}</strong>
                     </td>
-                    <td>{r.client_dni || '—'}</td>
+                    <td>{r.client_dni || '-'}</td>
                     <td>{formatMoney(r.amount)}</td>
                     <td>{r.term_months} meses</td>
                     <td>
@@ -116,9 +118,9 @@ export default function SolicitudesPage() {
                     {puedeAprobar && (
                       <td>
                         {esFinal ? (
-                          <span style={{ color: 'var(--bp-gris-medio)', fontSize: 13 }}>—</span>
+                          <span style={{ color: 'var(--bp-gris-medio)', fontSize: 13 }}>-</span>
                         ) : (
-                          <div style={{ display: 'flex', gap: 8 }}>
+                          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                             <button
                               type="button"
                               className="btn-aprobar"
@@ -126,7 +128,7 @@ export default function SolicitudesPage() {
                               onClick={() => cambiarEstado(r.id, 'aprobado')}
                               style={btnStyle('#0F766E')}
                             >
-                              {busyId === r.id ? '…' : 'Aprobar'}
+                              {busyId === r.id ? '...' : 'Aprobar'}
                             </button>
                             <button
                               type="button"
@@ -149,11 +151,10 @@ export default function SolicitudesPage() {
         </table>
       </div>
 
-      {/* Trazabilidad del puente End-to-End */}
       <div style={{ marginTop: 28 }}>
         <h2 className="section-title">Integración End-to-End</h2>
         <p style={{ color: 'var(--bp-gris-medio)', marginTop: -8, marginBottom: 12, fontSize: 13 }}>
-          Eventos publicados hacia la app del cliente al aprobar (tabla <code>sync_log</code>)
+          Eventos publicados hacia la app del cliente al aprobar (tabla <code>sync_log</code>).
         </p>
         {!isSupabaseConfigured ? (
           <p style={{ fontSize: 13, color: 'var(--bp-gris-medio)' }}>
@@ -169,15 +170,16 @@ export default function SolicitudesPage() {
               <li
                 key={l.id}
                 style={{
-                  borderLeft: '3px solid #0F766E',
-                  padding: '8px 12px',
+                  borderLeft: '4px solid #0F766E',
+                  padding: '10px 13px',
                   marginBottom: 8,
-                  background: 'var(--bp-gris-claro, #f4f6f8)',
-                  borderRadius: 6,
+                  background: 'rgba(255, 255, 255, 0.82)',
+                  borderRadius: 10,
                   fontSize: 13,
+                  boxShadow: '0 10px 24px rgba(6, 24, 58, 0.08)',
                 }}
               >
-                <strong>{l.evento}</strong> — {l.detalle}
+                <strong>{l.evento}</strong>: {l.detalle}
                 <div style={{ color: 'var(--bp-gris-medio)', fontSize: 11, marginTop: 2 }}>
                   {new Date(l.created_at).toLocaleString('es-EC')}
                 </div>
@@ -195,10 +197,11 @@ function btnStyle(bg) {
     background: bg,
     color: '#fff',
     border: 'none',
-    borderRadius: 6,
-    padding: '6px 14px',
+    borderRadius: 999,
+    padding: '7px 14px',
     fontSize: 13,
-    fontWeight: 600,
+    fontWeight: 800,
+    boxShadow: '0 10px 18px rgba(6, 24, 58, 0.14)',
     cursor: 'pointer',
   };
 }

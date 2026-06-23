@@ -1,8 +1,18 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { BarChart3, Briefcase, Coins, FileText, Home, Shield } from 'lucide-react';
 import { LiveClock } from './Ui';
 import { navItems } from '../config/theme';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+
+const navIconMap = {
+  home: Home,
+  briefcase: Briefcase,
+  file: FileText,
+  shield: Shield,
+  coins: Coins,
+  chart: BarChart3,
+};
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -17,7 +27,7 @@ export default function Layout() {
     <div className="app-shell">
       {!isSupabaseConfigured && (
         <div className="banner-config">
-          Modo demo — Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env y ejecuta los
+          Modo demo: configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env y ejecuta los
           scripts SQL en Supabase
         </div>
       )}
@@ -27,9 +37,7 @@ export default function Layout() {
           <div className="top-bar__logo">BP</div>
           <div>
             <div>Banco Pichincha</div>
-            <div style={{ fontSize: '0.65rem', fontWeight: 500, opacity: 0.85 }}>
-              CORE FINANCIERO · Fuerza de Ventas
-            </div>
+            <div className="top-bar__brand-sub">Core financiero · Fuerza de Ventas</div>
           </div>
         </div>
         <LiveClock />
@@ -38,7 +46,7 @@ export default function Layout() {
           <div className="top-bar__user-info">
             <div className="top-bar__user-name">{user?.name ?? 'Usuario'}</div>
             <div className="top-bar__user-role">
-              {user?.role ?? '—'}
+              {user?.role ?? '-'}
               {!puedeAprobar && ' · sin permiso de aprobación'}
             </div>
           </div>
@@ -49,18 +57,22 @@ export default function Layout() {
       </header>
 
       <nav className="nav-bar">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.id}
-            to={item.path}
-            end={item.path === '/'}
-            className={({ isActive }) =>
-              `nav-bar__link${isActive ? ' nav-bar__link--active' : ''}`
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
+        {navItems.map((item) => {
+          const Icon = navIconMap[item.icon] || Home;
+          return (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              end={item.path === '/'}
+              className={({ isActive }) =>
+                `nav-bar__link${isActive ? ' nav-bar__link--active' : ''}`
+              }
+            >
+              <Icon className="nav-bar__icon" size={17} />
+              {item.label}
+            </NavLink>
+          );
+        })}
       </nav>
 
       <main className="main-content">

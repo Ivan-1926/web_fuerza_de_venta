@@ -11,10 +11,10 @@ function MoraBadge({ dias }) {
       style={{
         background: color,
         color: '#fff',
-        borderRadius: 12,
-        padding: '2px 10px',
+        borderRadius: 999,
+        padding: '4px 10px',
         fontSize: 12,
-        fontWeight: 600,
+        fontWeight: 800,
       }}
     >
       {label}
@@ -37,32 +37,28 @@ export default function CarteraPage() {
   const filtered = rows.filter((r) => {
     const t = q.trim().toLowerCase();
     if (!t) return true;
-    return (
-      (r.name || '').toLowerCase().includes(t) || (r.dni || '').toLowerCase().includes(t)
-    );
+    return (r.name || '').toLowerCase().includes(t) || (r.dni || '').toLowerCase().includes(t);
   });
 
   return (
     <>
       <div className="page-header">
         <h2>Cartera de clientes</h2>
-        <p style={{ color: 'var(--bp-gris-medio)', marginTop: 4 }}>
-          Clientes compartidos con la app de campo (tabla <code>clients</code>)
+        <p>
+          Clientes compartidos con la app de campo (tabla <code>clients</code>).
         </p>
       </div>
 
       <input
         type="search"
-        placeholder="Buscar por nombre o DNI…"
+        placeholder="Buscar por nombre o DNI..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
         style={{
           width: '100%',
-          maxWidth: 360,
-          padding: '8px 12px',
+          maxWidth: 380,
+          padding: '11px 14px',
           marginBottom: 16,
-          borderRadius: 8,
-          border: '1px solid #d1d5db',
           fontSize: 14,
         }}
       />
@@ -83,13 +79,13 @@ export default function CarteraPage() {
             {loading ? (
               <tr>
                 <td colSpan={6} style={{ textAlign: 'center', padding: 32 }}>
-                  Cargando…
+                  Cargando...
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ textAlign: 'center', padding: 32 }}>
-                  Sin registros — ejecuta los scripts SQL en Supabase
+                  Sin registros. Ejecuta los scripts SQL en Supabase.
                 </td>
               </tr>
             ) : (
@@ -99,7 +95,7 @@ export default function CarteraPage() {
                     <strong>{r.name}</strong>
                   </td>
                   <td>{r.dni}</td>
-                  <td>{r.business_name || '—'}</td>
+                  <td>{r.business_name || '-'}</td>
                   <td>{Number(r.credit_score || 0).toFixed(0)}</td>
                   <td>{formatMoney(r.total_debt)}</td>
                   <td>
