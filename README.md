@@ -57,7 +57,7 @@ Pantalla de login en **`/login`** (Supabase Auth). Botón **Rellenar credenciale
 
 | Rol | Usuario | Contraseña |
 |-----|---------|------------|
-| **Supervisor** (web) | `supervisor@pichincha.com` | `Docente2025!` |
+| **Supervisor** (web) | `supervisor@pichincha.com` | `cyA675ytji` |
 
 Tras ingresar → **Solicitudes** → **Aprobar** / **Rechazar**.
 
@@ -76,8 +76,8 @@ App cliente (`APP_TEORIA_PICHINCHA`): scripts `02`, `03`, `04` en `banco_pichinc
 
 Crear usuarios Auth (opcional, login real en móvil):
 
-- `supervisor@pichincha.com` / `Docente2025!`
-- `asesor@pichincha.com` / `Docente2025!`
+- `supervisor@pichincha.com` / `cyA675ytji`
+- `asesor@pichincha.com` / `cyA675ytji`
 
 ## Sincronización con las apps Flutter
 
@@ -85,6 +85,9 @@ Crear usuarios Auth (opcional, login real en móvil):
 |-----------|-------|--------|
 | Cartera | `fv_clients` | Apps FV + seed |
 | Solicitudes | `fv_credit_applications` | App **cliente** (Contratar) |
+| Evaluación | `fichas_campo` + `consultas_buro` | App móvil FV |
+| Cobranza | `fv_clients` (mora) | Apps FV + seed |
+| Reportes | `historial_crediticio` + KPIs | Web + seed Caso 1 |
 | E2E | `sync_log` / `sync_outbox` | Trigger al aprobar |
 
 ## Integración End-to-End
@@ -99,9 +102,17 @@ Crear usuarios Auth (opcional, login real en móvil):
 Solo el rol **supervisor** (o **admin**) ve botones Aprobar/Rechazar en Solicitudes.
 El asesor de campo usa la **app móvil**, no esta web.
 
-## Modo demo sin Supabase
+## Caso demo — DNI 40118120
 
-Sin `.env` válido, la web muestra datos mock locales.
+Historia crediticia de **Anaximandro Quispe** para el módulo **Reportes**:
+
+1. Registro en app cliente (24/06/2026)
+2. Solicitud S/1.000 — capital de trabajo (25/06/2026)
+3. Consulta buró — score 712, sin mora (27/06/2026)
+4. Evaluación F1-F5 — score 79, segmento ESTANDAR (28/06/2026)
+5. En comité — pendiente de aprobación supervisor
+
+Script SQL: `supabase/scripts/06_historia_cliente_40118120.sql`
 
 ## Repositorio
 

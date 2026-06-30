@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowRight, BadgeCheck, Building2, LockKeyhole, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, BadgeCheck, Building2, LockKeyhole, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const SUPERVISOR_EMAIL = 'supervisor@pichincha.com';
-const SUPERVISOR_PASS = 'Docente2025!';
+const SUPERVISOR_PASS = 'cyA675ytji';
 
 const highlights = [
   { label: 'Banca con propósito', value: 'Impulsamos negocios familiares y microempresas.' },
@@ -142,17 +142,9 @@ export default function LoginPage() {
             </button>
 
             <button type="button" className="login-form__secondary" onClick={fillSupervisor}>
-              Usar credenciales demo
+              Rellenar credenciales
             </button>
           </form>
-
-          <div className="brand-login-card__note">
-            <Sparkles size={16} />
-            <p>
-              El registro de usuarios se gestiona desde el backend/Supabase para mantener permisos,
-              roles y aprobaciones bajo control.
-            </p>
-          </div>
         </div>
       </aside>
     </main>

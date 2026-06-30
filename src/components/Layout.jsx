@@ -2,7 +2,6 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { BarChart3, Briefcase, Coins, FileText, Home, Shield } from 'lucide-react';
 import { LiveClock } from './Ui';
 import { navItems } from '../config/theme';
-import { isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 
 const navIconMap = {
@@ -25,13 +24,6 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      {!isSupabaseConfigured && (
-        <div className="banner-config">
-          Modo demo: configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env y ejecuta los
-          scripts SQL en Supabase
-        </div>
-      )}
-
       <header className="top-bar">
         <div className="top-bar__brand">
           <span className="top-bar__logo top-bar__logo--image">

@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { EstadoBadge, formatMoney } from '../components/Ui';
-import {
-  fetchSolicitudes,
-  actualizarEstadoSolicitud,
-  fetchSyncLog,
-  isSupabaseConfigured,
-} from '../lib/supabase';
+import { fetchSolicitudes, actualizarEstadoSolicitud, fetchSyncLog } from '../lib/supabase';
 
 const ESTADOS_FINALES = ['aprobado', 'desembolsado', 'rechazado'];
 
@@ -43,7 +38,7 @@ export default function SolicitudesPage() {
       );
       await load();
     } else {
-      setToast(res.demo ? 'Modo demo: configura Supabase para aprobar' : `Error: ${res.error}`);
+      setToast(res.error ? `Error: ${res.error}` : 'No se pudo actualizar la solicitud');
     }
     setTimeout(() => setToast(null), 4000);
   }
@@ -156,13 +151,9 @@ export default function SolicitudesPage() {
         <p style={{ color: 'var(--bp-gris-medio)', marginTop: -8, marginBottom: 12, fontSize: 13 }}>
           Eventos publicados hacia la app del cliente al aprobar (tabla <code>sync_log</code>).
         </p>
-        {!isSupabaseConfigured ? (
+        {!syncLog.length ? (
           <p style={{ fontSize: 13, color: 'var(--bp-gris-medio)' }}>
-            Configura Supabase para ver la trazabilidad real.
-          </p>
-        ) : syncLog.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'var(--bp-gris-medio)' }}>
-            Aún no hay eventos. Aprueba una solicitud con DNI de un cliente registrado en la app.
+            Aún no hay eventos registrados.
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
