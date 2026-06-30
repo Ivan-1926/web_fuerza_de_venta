@@ -82,18 +82,28 @@ INSERT INTO public.productos_activos (
 ON CONFLICT (id) DO NOTHING;
 
 -- Cliente en cartera FV (cobranza + solicitudes E2E)
+-- IDs UUID alineados con 08_seed_30_casos.sql (caso 1 = Anaximandro Quispe)
 INSERT INTO public.fv_clients (
   id, name, dni, business_name, credit_score, total_debt, days_overdue, status
 ) VALUES (
-  'fv-caso1', 'Anaximandro Quispe', '40118120', 'Textilería Quispe', 712, 420, 12, 'active'
+  '50000000-0000-4000-8000-000000000001'::uuid,
+  'Anaximandro Quispe', '40118120', 'Bodega Don Anaxi', 712, 4500, 0, 'active'
 )
 ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  business_name = EXCLUDED.business_name,
+  credit_score = EXCLUDED.credit_score,
   total_debt = EXCLUDED.total_debt,
-  days_overdue = EXCLUDED.days_overdue;
+  days_overdue = EXCLUDED.days_overdue,
+  status = EXCLUDED.status;
 
 INSERT INTO public.fv_credit_applications (
   id, client_name, client_dni, amount, term_months, status, submitted_at
 ) VALUES (
-  'fv-sol-caso1', 'Anaximandro Quispe', '40118120', 1000, 12, 'comite', NOW() - INTERVAL '5 days'
+  '60000000-0000-4000-8000-000000000001'::uuid,
+  'Anaximandro Quispe', '40118120', 1000, 12, 'comite', NOW() - INTERVAL '5 days'
 )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET
+  amount = EXCLUDED.amount,
+  status = EXCLUDED.status,
+  submitted_at = EXCLUDED.submitted_at;

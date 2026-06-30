@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { EstadoBadge, formatMoney } from '../components/Ui';
-import { fetchSolicitudes, actualizarEstadoSolicitud, fetchSyncLog } from '../lib/supabase';
+import {
+  fetchSolicitudes,
+  actualizarEstadoSolicitud,
+  fetchSyncLog,
+  productoFromPurpose,
+  isSupabaseConfigured,
+} from '../lib/supabase';
 
-const ESTADOS_FINALES = ['aprobado', 'desembolsado', 'rechazado'];
+const ESTADOS_FINALES = ['aprobado', 'desembolsado', 'rechazado', 'condicionado'];
 
 export default function SolicitudesPage() {
   const { puedeAprobar } = useOutletContext();
@@ -13,11 +19,15 @@ export default function SolicitudesPage() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [toast, setToast] = useState(null);
+  const [liveData, setLiveData] = useState(isSupabaseConfigured);
+  const [fetchError, setFetchError] = useState(null);
 
   async function load() {
     setLoading(true);
-    const [sols, log] = await Promise.all([fetchSolicitudes(), fetchSyncLog()]);
-    setRows(sols);
+    const [solsRes, log] = await Promise.all([fetchSolicitudes(), fetchSyncLog()]);
+    setRows(solsRes.rows);
+    setLiveData(solsRes.live);
+    setFetchError(solsRes.error ?? null);
     setSyncLog(log);
     setLoading(false);
   }
@@ -46,12 +56,37 @@ export default function SolicitudesPage() {
   return (
     <>
       <div className="page-header">
-        <h2>Mis solicitudes</h2>
-        <p>
-          Expedientes transmitidos desde campo (tabla compartida{' '}
-          <code>credit_applications</code>).
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
+          <div>
+            <h2>Mis solicitudes</h2>
+            <p>
+              Expedientes desde app cliente y fuerza de ventas (tabla{' '}
+              <code>fv_credit_applications</code>).
+            </p>
+          </div>
+          <button type="button" onClick={load} disabled={loading} style={btnStyle('#003DA5')}>
+            {loading ? 'Actualizando…' : 'Actualizar'}
+          </button>
+        </div>
       </div>
+
+      {!liveData && (
+        <div style={bannerStyle('#B45309', '#FFFBEB')}>
+          Modo demo — configure <code>.env</code> o reinicie el servidor. No muestra solicitudes
+          reales de la app cliente.
+        </div>
+      )}
+      {liveData && fetchError && (
+        <div style={bannerStyle('#B91C1C', '#FEF2F2')}>
+          Error al leer Supabase: {fetchError}. Ejecute{' '}
+          <code>supabase/scripts/07_fix_solicitudes_rls.sql</code>.
+        </div>
+      )}
+      {liveData && !fetchError && rows.length > 0 && (
+        <div style={bannerStyle('#0F766E', '#ECFDF5')}>
+          Datos en vivo — {rows.length} solicitud(es) sincronizadas desde Supabase.
+        </div>
+      )}
 
       {toast && (
         <div
@@ -76,6 +111,7 @@ export default function SolicitudesPage() {
             <tr>
               <th>Cliente</th>
               <th>DNI</th>
+              <th>Producto</th>
               <th>Monto</th>
               <th>Plazo</th>
               <th>Estado</th>
@@ -85,13 +121,13 @@ export default function SolicitudesPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={puedeAprobar ? 6 : 5} style={{ textAlign: 'center', padding: 32 }}>
+                <td colSpan={puedeAprobar ? 7 : 6} style={{ textAlign: 'center', padding: 32 }}>
                   Cargando...
                 </td>
               </tr>
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={puedeAprobar ? 6 : 5} style={{ textAlign: 'center', padding: 32 }}>
+                <td colSpan={puedeAprobar ? 7 : 6} style={{ textAlign: 'center', padding: 32 }}>
                   Sin solicitudes registradas.
                 </td>
               </tr>
@@ -105,6 +141,7 @@ export default function SolicitudesPage() {
                       <strong>{r.client_name || r.client_dni || r.id}</strong>
                     </td>
                     <td>{r.client_dni || '-'}</td>
+                    <td>{productoFromPurpose(r.purpose)}</td>
                     <td>{formatMoney(r.amount)}</td>
                     <td>{r.term_months} meses</td>
                     <td>
@@ -194,5 +231,18 @@ function btnStyle(bg) {
     fontWeight: 800,
     boxShadow: '0 10px 18px rgba(6, 24, 58, 0.14)',
     cursor: 'pointer',
+  };
+}
+
+function bannerStyle(color, bg) {
+  return {
+    background: bg,
+    color,
+    padding: '10px 14px',
+    borderRadius: 10,
+    marginBottom: 14,
+    fontSize: 13,
+    fontWeight: 600,
+    border: `1px solid ${color}33`,
   };
 }

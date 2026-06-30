@@ -1,15 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+/** Mismo proyecto Supabase que las apps Flutter (respaldo si falta .env). */
+const DEFAULT_SUPABASE_URL = 'https://uomaqpphyouzbnestbba.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY =
+  'sb_publishable_fymmXEWgkQSdaXe-F3_8OA_QK6ZOnCe';
+
+const url = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured =
-  url &&
-  key &&
+  Boolean(url) &&
+  Boolean(key) &&
   url !== 'https://tu-proyecto.supabase.co' &&
   !key.includes('tu-anon') &&
   !key.includes('tu-anon-key');
 
+export const supabaseUrl = url;
 export const supabase = isSupabaseConfigured ? createClient(url, key) : null;
 
 // =============================================================================
@@ -62,19 +68,28 @@ export async function fetchCartera(limit = 100) {
   return data ?? [];
 }
 
+/** Extrae el nombre del producto desde el campo purpose. */
+export function productoFromPurpose(purpose) {
+  if (!purpose) return '-';
+  const match = purpose.match(/\[Canal: cliente\]\s*(.+?)\s*—/);
+  if (match) return match[1].trim();
+  const short = purpose.split('—')[0]?.trim();
+  return short || purpose;
+}
+
 /** Solicitudes de crédito (originadas en app cliente o app FV). */
 export async function fetchSolicitudes(limit = 100) {
-  if (!supabase) return getMockSolicitudes();
+  if (!supabase) return { rows: getMockSolicitudes(), live: false };
   const { data, error } = await supabase
     .from('fv_credit_applications')
     .select('*')
     .order('submitted_at', { ascending: false })
     .limit(limit);
   if (error) {
-    console.warn('[Supabase]', error.message);
-    return getMockSolicitudes();
+    console.error('[Supabase] fetchSolicitudes:', error.message);
+    return { rows: [], live: true, error: error.message };
   }
-  return data ?? [];
+  return { rows: data ?? [], live: true };
 }
 
 /**
@@ -419,6 +434,24 @@ function buildReporteFromFvClient(c) {
     solicitudes: [],
     solicitudes_fv: [],
   };
+}
+
+/** Buró simulado por último dígito del DNI (30 casos académicos). */
+export function buroPorUltimoDigito(dni) {
+  const ultimo = parseInt(String(dni).replace(/\D/g, '').slice(-1), 10) || 0;
+  const map = {
+    0: { calificacion: 'NORMAL', entidades: 1, deuda: 4500, mora: 0, score: 712, blk: false },
+    1: { calificacion: 'NORMAL', entidades: 2, deuda: 12000, mora: 0, score: 712, blk: false },
+    2: { calificacion: 'CPP', entidades: 2, deuda: 18000, mora: 15, score: 580, blk: false },
+    3: { calificacion: 'NORMAL', entidades: 0, deuda: 0, mora: 0, score: 712, blk: false },
+    4: { calificacion: 'DUDOSO', entidades: 3, deuda: 25000, mora: 95, score: 420, blk: false },
+    5: { calificacion: 'DEFICIENTE', entidades: 2, deuda: 16000, mora: 45, score: 480, blk: false },
+    6: { calificacion: 'NORMAL', entidades: 1, deuda: 6000, mora: 0, score: 712, blk: false },
+    7: { calificacion: 'PERDIDA', entidades: 4, deuda: 40000, mora: 210, score: 350, blk: true },
+    8: { calificacion: 'CPP', entidades: 1, deuda: 9000, mora: 20, score: 580, blk: false },
+    9: { calificacion: 'NORMAL', entidades: 2, deuda: 14000, mora: 0, score: 712, blk: false },
+  };
+  return map[ultimo] ?? map[0];
 }
 
 export const CASO_DEMO_DNI = '40118120';

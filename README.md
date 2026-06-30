@@ -112,7 +112,9 @@ Historia crediticia de **Anaximandro Quispe** para el módulo **Reportes**:
 4. Evaluación F1-F5 — score 79, segmento ESTANDAR (28/06/2026)
 5. En comité — pendiente de aprobación supervisor
 
-Script SQL: `supabase/scripts/06_historia_cliente_40118120.sql`
+4. **`08_seed_30_casos.sql`** — 30 casos académicos microempresa (ver `CASOS_30_CREDITO.md`)
+
+Script SQL: `supabase/scripts/06_historia_cliente_40118120.sql` (Caso 1 detallado; incluido en script 08)
 
 ## Repositorio
 
