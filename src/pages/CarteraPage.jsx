@@ -85,7 +85,7 @@ export default function CarteraPage() {
             ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ textAlign: 'center', padding: 32 }}>
-                  Sin registros. Ejecuta los scripts SQL en Supabase.
+                  Sin registros en cartera.
                 </td>
               </tr>
             ) : (

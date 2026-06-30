@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SegmentBadge, formatMoney } from '../components/Ui';
-import { fetchEvaluaciones } from '../lib/supabase';
+import { CASO_DEMO_DNI, fetchEvaluaciones } from '../lib/supabase';
 
 function ScoreBar({ label, value }) {
   const pct = Math.min(100, Math.max(0, Number(value || 0)));
@@ -32,6 +32,8 @@ export default function EvaluacionPage() {
   useEffect(() => {
     fetchEvaluaciones().then((data) => {
       setRows(data);
+      const caso = data.find((r) => r.cliente?.cedula === CASO_DEMO_DNI);
+      if (caso) setSelected(caso);
       setLoading(false);
     });
   }, []);

@@ -234,7 +234,7 @@ export async function signInAdvisor(email, password) {
       sessionStorage.setItem('fv_web_mock_user', JSON.stringify(user));
       return { ok: true, user };
     }
-    return { ok: false, error: 'Credenciales inválidas (modo demo sin Supabase).' };
+    return { ok: false, error: 'Correo o contraseña incorrectos.' };
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({

@@ -92,7 +92,7 @@ export default function SolicitudesPage() {
             ) : rows.length === 0 ? (
               <tr>
                 <td colSpan={puedeAprobar ? 6 : 5} style={{ textAlign: 'center', padding: 32 }}>
-                  Sin solicitudes. Ejecuta los scripts SQL en Supabase.
+                  Sin solicitudes registradas.
                 </td>
               </tr>
             ) : (

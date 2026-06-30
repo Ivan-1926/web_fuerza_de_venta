@@ -175,15 +175,6 @@ code {
   opacity: 0.75;
 }
 
-.banner-config {
-  background: linear-gradient(90deg, var(--bp-amarillo), #ffe98a);
-  color: var(--bp-azul-profundo);
-  padding: 10px 2rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-align: center;
-}
-
 .top-bar {
   min-height: 76px;
   padding: 0 2rem;
@@ -363,9 +354,9 @@ code {
 }
 
 .nav-bar__link--active {
-  color: var(--bp-azul-profundo);
-  background: linear-gradient(135deg, rgba(255, 210, 63, 0.9), rgba(255, 236, 155, 0.95));
-  box-shadow: 0 12px 24px rgba(230, 188, 0, 0.2);
+  color: var(--bp-blanco);
+  background: linear-gradient(135deg, var(--bp-azul-medio), var(--bp-cian));
+  box-shadow: 0 12px 24px rgba(11, 104, 200, 0.22);
 }
 
 .nav-bar__icon {
@@ -391,7 +382,7 @@ code {
   border-radius: var(--bp-radio);
   background:
     linear-gradient(120deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.78)),
-    linear-gradient(135deg, rgba(35, 180, 199, 0.14), rgba(255, 210, 63, 0.18));
+    linear-gradient(135deg, rgba(35, 180, 199, 0.14), rgba(11, 104, 200, 0.1));
   box-shadow: 0 16px 40px rgba(6, 24, 58, 0.08);
 }
 
@@ -404,7 +395,7 @@ code {
   height: 220px;
   background:
     linear-gradient(135deg, rgba(5, 59, 143, 0.14), rgba(35, 180, 199, 0.18)),
-    repeating-linear-gradient(45deg, rgba(255, 210, 63, 0.42) 0 5px, transparent 5px 16px);
+    repeating-linear-gradient(45deg, rgba(11, 104, 200, 0.12) 0 5px, transparent 5px 16px);
   border-radius: 46% 54% 44% 56%;
 }
 
@@ -1258,11 +1249,6 @@ input[type='search']:focus {
 }
 
 @media (max-width: 640px) {
-  .banner-config {
-    padding: 9px 1rem;
-    font-size: 0.75rem;
-  }
-
   .top-bar {
     gap: 0.85rem;
   }

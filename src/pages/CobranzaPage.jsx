@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { formatMoney } from '../components/Ui';
-import { fetchCobranza } from '../lib/supabase';
+import { CASO_DEMO_DNI, fetchCobranza } from '../lib/supabase';
 
 function MoraBadge({ dias }) {
   const d = Number(dias || 0);
@@ -24,7 +24,7 @@ function MoraBadge({ dias }) {
 export default function CobranzaPage() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(CASO_DEMO_DNI);
 
   useEffect(() => {
     fetchCobranza().then((data) => {
